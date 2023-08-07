@@ -3,6 +3,8 @@ class Transaction
   attr_accessor :activity_id, :date, :type, :method, :amount, :balance,
                 :requester, :source, :destination
 
+  TRANSACTION_TYPE = [DEPOSIT = 'DEPOSIT', INVESTMENT = 'INVESTMENT', REFUND: 'REFUND', WITHDRAWAL: 'WITHDRAWAL',  TRANSFER: 'TRANSFER']
+
   def initialize(attributes = {})
     attributes.each { |key, value| send("#{key}=", value) }
     @requester = Requester.new(attributes['requester']) if attributes['requester']
@@ -16,17 +18,17 @@ class Transaction
   end
 
   def self.transaction_description(transaction)
-    #puts "TRANSACTION REQUESTER", transaction.requester&.[]('type').titleize
-    #puts "TRANSACTION REQUESTER type", transaction.requester['type']
-    #puts "TRANSACTION SOURCE type", transaction.source['type']
-    #puts "TRANSACTION SOURCE description", transaction.source['description']
-    #puts "TRANSACTION DESTINATION description", transaction.destination['description']
-    #{transaction&.requester['type']} made from
-    if transaction&.source.[]('description').present?
-    "#{transaction&.source.[]('description')} to #{transaction&.destination.[]('type')} / #{transaction&.destination.[]('description')}"
-    else
-      "#{transaction&.destination.[]('type')} / #{transaction&.destination.[]('description')}"
-    end
+    description = "A #{transaction&.type} has been made"
+    source_type = ''
+    source_description= ''
+    destination_type =''
+    destination_description =''
+
+    #if transaction&.source.[]('description').present?
+    "A #{transaction&.type} has been made: #{transaction&.source.[]('description')} To #{transaction&.destination.[]('type')} / #{transaction&.destination.[]('description')}"
+    #else
+    #  "#{transaction&.destination.[]('type')} / #{transaction&.destination.[]('description')}"
+    #end
   end
 
   def total_balance

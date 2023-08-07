@@ -11,8 +11,6 @@ class TransactionsController < ApplicationController
   end
   def upload
     uploaded_file = params[:json_file]
-    # Rails.cache.clear
-
     if uploaded_file.present?
       json_data = JSON.parse(uploaded_file.read)
       @transactions = parse_json_data(json_data)
@@ -21,7 +19,6 @@ class TransactionsController < ApplicationController
       Rails.cache.write('transactions',  @transactions)
 
       redirect_to transactions_path
-      #redirect_to transactions_path(transactions_data: @transactions, total_balance: @total_balance)
     else
       flash.now[:error] = 'Please select a JSON file to upload.'
       render :upload_form
