@@ -1,0 +1,2 @@
+class Requester < Entity
+end

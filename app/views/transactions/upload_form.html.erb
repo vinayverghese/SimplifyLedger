@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<%= form_tag(upload_transactions_path, method: :post, enctype: 'multipart/form-data') do %>
+  <%= file_field_tag :json_file %>
+  <%= submit_tag 'Upload JSON File' %>
+<% end %>
+
+<% if @transactions.present? %>
+  <h2>Total Balance: <%= number_to_currency(@total_balance) %></h2>
+
+  <table>
+    <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Amount</th>
+      <th>Balance</th>
+      <th>Requester Type</th>
+      <th>Source Type</th>
+      <th>Destination Type</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @transactions.each do |transaction| %>
+      <tr>
+        <td><%= transaction.date %></td>
+        <td><%= transaction.type %></td>
+        <td><%= number_to_currency(transaction.amount) %></td>
+        <td><%= number_to_currency(transaction.balance) %></td>
+        <td><%= transaction.requester&.type %></td>
+        <td><%= transaction.source&.type %></td>
+        <td><%= transaction.destination&.type %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
+</html>
