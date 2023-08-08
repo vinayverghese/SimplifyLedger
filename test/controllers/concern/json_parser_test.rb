@@ -44,6 +44,8 @@ class JsonParserTest < ActiveSupport::TestCase
     assert_equal "INVESTOR", transaction.destination['type']
     assert_equal 76510190788, transaction.destination['id']
     assert_equal "Michael Daugherty", transaction.destination['description']
+
+    assert_equal transaction.calculated_balance, transaction.balance
   end
 
   test 'parse_json_data filters out duplicate activity IDs' do
@@ -89,7 +91,6 @@ class JsonParserTest < ActiveSupport::TestCase
         }
       },
     ]
-    puts 'PARSED', JSON.parse(json_data_with_duplicates)
     parsed_transactions = parse_json_data(json_data_with_duplicates)
 
     assert_equal 1, parsed_transactions.length
