@@ -26,13 +26,11 @@ class Transaction
     source_description = ""
     destination_description = ""
     source_type = ""
-    # description = "A #{transaction&.type.titleize} has been made"
 
     if transaction&.source.[]('description').present?
       source_description = transaction&.source.[]('description')
     end
     source_type = transaction&.source.[]('type') if  transaction&.source.[]('type').present?
-    destination_type = transaction&.destination.[]('type') if transaction&.destination.[]('type').present?
     destination_description = transaction&.destination.[]('description') if  transaction&.destination.[]('description').present?
 
     "#{source_description} has made a #{source_type.titleize} transaction towards #{destination_description}"

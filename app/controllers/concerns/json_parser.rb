@@ -22,11 +22,6 @@ module JsonParser
         transaction.calculated_balance = calculated_balance
         transaction
       end.compact.sort_by { |t| t.date }.reverse!
-
-      final_transaction = transactions.last
-      puts "Final balance: #{calculated_balance}"
-      puts "Expected final balance: #{final_transaction.balance}"
-
       transactions.to_a
     end
   end

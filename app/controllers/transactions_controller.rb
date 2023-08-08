@@ -7,7 +7,7 @@ class TransactionsController < ApplicationController
     json_data = params[:transactions]
     output = parse_json_data(json_data)
     @transactions = output
-    @total_balance = calculate_total_balance
+    @total_balance = @transactions.first.balance
     @start_date = @transactions.last.date
     @end_date = @transactions.first.date
   end
@@ -35,14 +35,4 @@ class TransactionsController < ApplicationController
   end
 
   private
-
-  def calculate_total_balance
-    if @transactions.present?
-      if @transactions.last.calculated_balance != @transactions.last.balance
-        @transactions.last.calculated_balance
-      else
-        @transactions.last.balance
-      end
-    end
-  end
 end
