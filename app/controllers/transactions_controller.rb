@@ -29,12 +29,10 @@ class TransactionsController < ApplicationController
         render :upload_form, notice: 'Error'
       end
     rescue JSON::ParserError => e
-      puts 'parser error'
       @error_message = 'ERROR: This is not a valid JSON file.'
 
       flash.now[:error] = 'ERROR: This is not a valid JSON file'
     end
-    puts('ERROR_MSG', @error_message)
   end
 
   def upload_form
