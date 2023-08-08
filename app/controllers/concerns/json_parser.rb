@@ -29,5 +29,4 @@ module JsonParser
 
     transactions.to_a
   end
-
 end
