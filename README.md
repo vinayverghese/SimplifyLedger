@@ -20,6 +20,7 @@ The deployed version is available here: `https://simplify-ledger-06aefb87ee3d.he
 ## CONSIDERATIONS MADE
 - The json file that is accepted in the prescribed format will be parsed and the following operations will be made:
     - Any duplicate activity IDs will be ignored. Based on the sample data, any transactions with duplicate IDs contained identical data inside it.
+    - The total balance is calculated and stored for the sake of auditing. For the main application, the final balance is used since it is accurate.
     - Description field: Combining the type and description of source and destination, a custom description is provided.
 
 ## TECHNICAL CONSIDERATIONS
