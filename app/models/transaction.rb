@@ -3,7 +3,7 @@ class Transaction
   attr_accessor :activity_id, :date, :type, :method, :amount, :balance,
                 :requester, :source, :destination, :calculated_balance
 
-  TRANSACTION_TYPE = [DEPOSIT = 'DEPOSIT', INVESTMENT = 'INVESTMENT', REFUND: 'REFUND', WITHDRAWAL: 'WITHDRAWAL',  TRANSFER: 'TRANSFER']
+  TRANSACTION_TYPE = [DEPOSIT = 'DEPOSIT', INVESTMENT = 'INVESTMENT', REFUND: 'REFUND', WITHDRAWAL: 'WITHDRAWAL', TRANSFER: 'TRANSFER']
 
   def initialize(attributes = {})
     attributes.each { |key, value| send("#{key}=", value) }
@@ -23,17 +23,19 @@ class Transaction
   end
 
   def self.transaction_description(transaction)
-    description = "A #{transaction&.type} has been made"
-    source_type = ''
-    source_description= ''
-    destination_type =''
-    destination_description =''
+    source_description = ""
+    destination_description = ""
+    source_type = ""
+    # description = "A #{transaction&.type.titleize} has been made"
 
-    #if transaction&.source.[]('description').present?
-    "A #{transaction&.type} has been made: #{transaction&.source.[]('description')} To #{transaction&.destination.[]('type')} / #{transaction&.destination.[]('description')}"
-    #else
-    #  "#{transaction&.destination.[]('type')} / #{transaction&.destination.[]('description')}"
-    #end
+    if transaction&.source.[]('description').present?
+      source_description = transaction&.source.[]('description')
+    end
+    source_type = transaction&.source.[]('type') if  transaction&.source.[]('type').present?
+    destination_type = transaction&.destination.[]('type') if transaction&.destination.[]('type').present?
+    destination_description = transaction&.destination.[]('description') if  transaction&.destination.[]('description').present?
+
+    "#{source_description} has made a #{source_type.titleize} transaction towards #{destination_description}"
   end
 
   def total_balance
