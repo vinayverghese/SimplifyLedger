@@ -10,14 +10,19 @@ https://medium.com/@dyanagi/how-to-run-an-existing-ruby-on-rails-project-after-c
 The application will be available locally here: `http://localhost:3000/`
 
 The deployed version is available here: `https://simplify-ledger-06aefb87ee3d.herokuapp.com/` 
-## CONSIDERATIONS MADE
 
-- The main page has a file upload option that only accepts json files. Other formats will not be accepted.
+## INSTRUCTIONS
+
+1. Go to `https://simplify-ledger-06aefb87ee3d.herokuapp.com/`
+2. Upload a single json file with a list of transactions and click on 'Upload JSON File'
+3. The transactions will be parsed and shown in a table.
+
+
+## CONSIDERATIONS MADE
 - The json file that is accepted in the prescribed format will be parsed and the following operations will be made:
-    - Any duplicate activity IDs will be ignored. Based on the sample data, any transactions with duplicate IDs contained identical data.
-    - Total balance was calculated separate from the final balance and compared. If there was a mismatch, the calculated total balance was considered the accurate final balance.
-    - Description: Combining the type and description of source and destination, a custom description was provided.
+    - Any duplicate activity IDs will be ignored. Based on the sample data, any transactions with duplicate IDs contained identical data inside it.
+    - Total balance was calculated independent of the final balance and compared. If there is a mismatch, the calculated total balance was considered the accurate final balance.
+    - Description field: Combining the type and description of source and destination, a custom description is provided.
 
 ## TECHNICAL CONSIDERATIONS
-
 - A database has not been used here, since there was no need to store any data. However, it can be incorporated if required.
