@@ -1,32 +1,36 @@
 <!DOCTYPE html>
 <html>
 <h1>Past Transactions</h1>
-<% if @transactions.present? %>
-  <h2>Total Balance: <%= number_to_currency(@total_balance) %></h2>
-<% end %>
-<table>
-  <thead>
-  <tr>
-    <th>Activity Id</th>
-    <th>Date</th>
-    <th>Transaction</th>
-    <th>Transfer Details</th>
-    <th>Amount</th>
-    <th>Balance</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% @transactions.each do |transaction| %>
-    <tr>
-      <td><%= transaction.activity_id %></td>
-      <td><%= Transaction.convert_time(transaction.date) %></td>
-      <td><%= transaction.type %></td>
-      <td><%= Transaction.transaction_description(transaction)%> </td>
-      <td><%= number_to_currency(transaction.amount) %></td>
-      <td><%= number_to_currency(transaction.balance) %></td>
-    </tr>
+
+<div class="center">
+  <% if @transactions.present? %>
+    <h2>Total Balance: <%= number_to_currency(@total_balance) %></h2>
+    <h3><%= Transaction.convert_date(@start_date) %> to <%= Transaction.convert_date(@end_date) %> </h3>
+    </div>
+    <table>
+      <thead>
+      <tr>
+        <th>Activity Id</th>
+        <th>Date</th>
+        <th>Transaction</th>
+        <th>Transfer Details</th>
+        <th>Amount</th>
+        <th>Balance</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @transactions.each do |transaction| %>
+        <tr>
+          <td><%= transaction.activity_id %></td>
+          <td><%= Transaction.convert_time(transaction.date) %></td>
+          <td><%= transaction.type %></td>
+          <td><%= Transaction.transaction_description(transaction) %> </td>
+          <td><%= number_to_currency(transaction.amount) %></td>
+          <td><%= number_to_currency(transaction.balance) %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <%= link_to 'Upload JSON File', upload_form_path %>
   <% end %>
-  </tbody>
-</table>
-<%= link_to 'Upload JSON File', upload_form_path %>
-</html>
+  </html>
