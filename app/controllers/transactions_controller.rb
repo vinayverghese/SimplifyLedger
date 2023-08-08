@@ -4,25 +4,22 @@ class TransactionsController < ApplicationController
 
   def index
     @error_message = ''
-    @transactions = Rails.cache.read('transactions')
+    json_data = params[:transactions]
+    output = parse_json_data(json_data)
+    @transactions = output
     @total_balance = calculate_total_balance
     @start_date = @transactions.last.date
     @end_date = @transactions.first.date
   end
 
-  def create
-    @transactions
-  end
   def upload
-    Rails.cache.clear('transactions')
     begin
       uploaded_file = params[:json_file]
       if uploaded_file.present?
         json_data = JSON.parse(uploaded_file.read)
         @transactions = parse_json_data(json_data)
-        Rails.cache.write('transactions', @transactions)
 
-        redirect_to transactions_path
+        redirect_to transactions_path(:transactions => json_data)
       else
         flash.now[:error] = 'Please select a JSON file to upload.'
         @error_message = 'Please select a JSON file to upload.'
@@ -30,7 +27,6 @@ class TransactionsController < ApplicationController
       end
     rescue JSON::ParserError => e
       @error_message = 'ERROR: This is not a valid JSON file.'
-
       flash.now[:error] = 'ERROR: This is not a valid JSON file'
     end
   end
