@@ -37,12 +37,4 @@ class Transaction
 
     "#{source_description} has made a #{source_type.titleize} transaction towards #{destination_description}"
   end
-
-  def total_balance
-
-  end
-
-  def type_enum
-    TransactionType.types
-  end
 end

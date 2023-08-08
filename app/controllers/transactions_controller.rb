@@ -42,12 +42,6 @@ class TransactionsController < ApplicationController
 
   private
 
-  def validate_transactions
-    unless @transactions.present?
-      redirect_to '/'
-    end
-  end
-
   def calculate_total_balance
     if @transactions.present?
       if @transactions.last.calculated_balance != @transactions.last.balance
