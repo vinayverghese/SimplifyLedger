@@ -1,7 +1,7 @@
 class Transaction
 
   attr_accessor :activity_id, :date, :type, :method, :amount, :balance,
-                :requester, :source, :destination
+                :requester, :source, :destination, :calculated_balance
 
   TRANSACTION_TYPE = [DEPOSIT = 'DEPOSIT', INVESTMENT = 'INVESTMENT', REFUND: 'REFUND', WITHDRAWAL: 'WITHDRAWAL',  TRANSFER: 'TRANSFER']
 
@@ -12,9 +12,14 @@ class Transaction
     @destination = Destination.new(attributes['destination']) if attributes['destination']
   end
 
+  def self.convert_date(datetime)
+    time = Time.parse(datetime).in_time_zone("UTC")
+    time.strftime("%-d/%-m/%y")
+  end
+
   def self.convert_time(datetime)
     time = Time.parse(datetime).in_time_zone("UTC")
-    time.strftime("%-d/%-m/%y: %H:%M:%S ")
+    time.strftime("%-d/%-m/%y - %H:%M:%S ")
   end
 
   def self.transaction_description(transaction)
