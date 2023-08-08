@@ -1,74 +1,60 @@
-# app/controllers/transactions_controller.rb
 class TransactionsController < ApplicationController
+  include JsonParser
+  add_flash_types :info, :error, :warning
 
   def index
+    @error_message = ''
     @transactions = Rails.cache.read('transactions')
-    @total_balance = @transactions.last.balance
+    @total_balance = calculate_total_balance
+    @start_date = @transactions.last.date
+    @end_date = @transactions.first.date
   end
 
   def create
     @transactions
   end
   def upload
-    uploaded_file = params[:json_file]
-    if uploaded_file.present?
-      json_data = JSON.parse(uploaded_file.read)
-      @transactions = parse_json_data(json_data)
-      @total_balance = calculate_total_balance
-      puts('TRANSACTIONS', @transactions)
-      Rails.cache.write('transactions',  @transactions)
+    Rails.cache.clear
+    begin
+      uploaded_file = params[:json_file]
+      if uploaded_file.present?
+        json_data = JSON.parse(uploaded_file.read)
+        @transactions = parse_json_data(json_data)
+        Rails.cache.write('transactions', @transactions)
 
-      redirect_to transactions_path
-    else
-      flash.now[:error] = 'Please select a JSON file to upload.'
-      render :upload_form
+        redirect_to transactions_path
+      else
+        flash.now[:error] = 'Please select a JSON file to upload.'
+        @error_message = 'Please select a JSON file to upload.'
+        render :upload_form, notice: 'Error'
+      end
+    rescue JSON::ParserError => e
+      puts 'parser error'
+      @error_message = 'ERROR: This is not a valid JSON file.'
+
+      flash.now[:error] = 'ERROR: This is not a valid JSON file'
     end
-  end
-
-  def parse_json_data(json_data = nil)
-    total_balance = 0
-    activity_ids = Set.new
-
-    transactions = json_data.map do |activity_data|
-      next if activity_ids.include?(activity_data['activity_id'])
-
-      activity_ids << activity_data['activity_id']
-
-      transaction = Transaction.new(
-        activity_id: activity_data['activity_id'],
-        date: activity_data['date'],
-        type: activity_data['type'],
-        amount: activity_data['amount'],
-        balance: activity_data['balance'],
-        requester: activity_data['requester'],
-        source: activity_data['source'],
-        destination: activity_data['destination']
-      )
-      total_balance += transaction.amount
-      transaction
-    end.compact.sort_by { |t| t.date }
-
-    final_transaction = transactions.last
-    puts "Final balance: #{total_balance}"
-    puts "Expected final balance: #{final_transaction.balance}"
-
-    @total_balance = total_balance
-    puts 'PARSED TRANSACTIONS AFTER FIX', transactions.size
-    transactions.to_a
+    puts('ERROR_MSG', @error_message)
   end
 
   def upload_form
-    Rails.cache.clear
-    # This is the action to render the file upload form
   end
 
   private
 
-  def all_transactions
-    @transactions
+  def validate_transactions
+    unless @transactions.present?
+      redirect_to '/'
+    end
   end
 
   def calculate_total_balance
-    # @transactions.last.balance if @transactions.present?
+    if @transactions.present?
+      if @transactions.last.calculated_balance != @transactions.last.balance
+        @transactions.last.calculated_balance
+      else
+        @transactions.last.balance
+      end
+    end
   end
 end
