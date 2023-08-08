@@ -14,7 +14,7 @@ class TransactionsController < ApplicationController
     @transactions
   end
   def upload
-    Rails.cache.clear
+    Rails.cache.clear('transactions')
     begin
       uploaded_file = params[:json_file]
       if uploaded_file.present?
